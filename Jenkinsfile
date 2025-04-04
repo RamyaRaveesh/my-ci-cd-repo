@@ -3,14 +3,14 @@ pipeline {
 
     environment {
         // Define any environment variables here, like AWS keys, etc.
-        GITHUB_REPO = 'https://github.com/yourusername/my-ci-cd-repo.git'
+        GITHUB_REPO = 'https://github.com/RamyaRaveesh/my-ci-cd-repo.git'
         BRANCH_NAME = 'main'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/yourusername/my-ci-cd-repo.git'
+                git branch: 'main', url: 'https://github.com/RamyaRaveesh/my-ci-cd-repo.git'
             }
         }
 
@@ -48,15 +48,19 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'Build and deployment successful!'
-            // Send Slack notification (optional)
-            slackSend (channel: '#ci-cd', message: 'Build and deployment successful!')
-        }
-        failure {
-            echo 'Build or deployment failed!'
-            // Send Slack notification (optional)
-            slackSend (channel: '#ci-cd', message: 'Build or deployment failed!')
+        always {
+            // Send email with build status
+            emailext(
+                subject: "Jenkins Build Status: ${currentBuild.currentResult}",
+                body: """
+                    <h3>Build Status: ${currentBuild.currentResult}</h3>
+                    <p>Job: ${env.JOB_NAME}</p>
+                    <p>Build Number: ${env.BUILD_NUMBER}</p>
+                    <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Test Report: <a href="${env.BUILD_URL}testReport">${env.BUILD_URL}testReport</a></p>
+                """,
+                to: "ramyashridharmoger@gmail.com"  // Replace with the email recipient's address
+            )
         }
     }
 }
