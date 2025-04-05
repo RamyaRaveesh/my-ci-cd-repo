@@ -5,6 +5,7 @@ pipeline {
         // Define any environment variables here, like AWS keys, etc.
         GITHUB_REPO = 'https://github.com/RamyaRaveesh/my-ci-cd-repo.git'
         BRANCH_NAME = 'main'
+        EC2_IP = '13.51.70.213'
     }
 
     stages {
@@ -38,7 +39,7 @@ pipeline {
                 script {
                     // SSH and deploy to EC2 (replace with your deployment script or commands)
                     bat '''
-                    ssh -o StrictHostKeyChecking=no -i C:\\path\\to\\your\\aws-key.pem ec2-user@${EC2_IP} << 'EOF'
+                    ssh -o StrictHostKeyChecking=no -i C:\\Users\\ravee\\Downloads\\my-sample-app.pem ubuntu@${EC2_IP} << 'EOF'
                         cd /path/to/project
                         git pull origin main
                         sudo systemctl restart your-app-service
