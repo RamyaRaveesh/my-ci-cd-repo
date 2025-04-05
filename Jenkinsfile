@@ -19,7 +19,8 @@ pipeline {
                 script {
                     // Use batch commands for Windows
                     bat 'python -m venv venv'
-                    bat './venv/Scripts/pip install -r requirements.txt'
+                    bat 'venv\Scripts\pip install -r requirements.txt
+'
                 }
             }
         }
@@ -28,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Use batch commands for Windows
-                    bat './venv/Scripts/pytest test_app.py'  // Adjust according to your test setup
+                    bat 'venv\Scripts\pytest test_app.py'  // Adjust according to your test setup
                 }
             }
         }
