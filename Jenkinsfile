@@ -2,23 +2,24 @@ pipeline {
     agent any
 
     environment {
-        // Define any environment variables here, like AWS keys, etc.
+        // Define environment variables like AWS keys, etc.
         GITHUB_REPO = 'https://github.com/RamyaRaveesh/my-ci-cd-repo.git'
         BRANCH_NAME = 'main'
-        EC2_IP = '13.51.70.213'
+        EC2_IP = '13.51.70.213'  // EC2 instance public IP address
+        PEM_PATH = 'C:\\Users\\ravee\\Downloads\\my-sample-app.pem'  // Path to your PEM file
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/RamyaRaveesh/my-ci-cd-repo.git'
+                git branch: 'main', url: GITHUB_REPO
             }
         }
 
         stage('Set Up Python Environment') {
             steps {
                 script {
-                    // Use batch commands for Windows
+                    // Create a virtual environment and install dependencies
                     bat 'python -m venv venv'
                     bat 'venv\\Scripts\\pip install -r requirements.txt'
                 }
@@ -28,7 +29,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Use batch commands for Windows
+                    // Run your test suite
                     bat 'venv\\Scripts\\pytest test_app.py'  // Adjust according to your test setup
                 }
             }
@@ -37,18 +38,18 @@ pipeline {
         stage('Deploy to AWS EC2') {
             steps {
                 script {
-            // SSH and deploy to EC2 (replace with your deployment script or commands)
-            bat '''
-            ssh -o StrictHostKeyChecking=no -i C:\\Users\\ravee\\Downloads\\my-sample-app.pem ubuntu@${EC2_IP} "cd /path/to/project && git pull origin main && sudo systemctl restart my-python-app"
-            '''
-        }
+                    // SSH and deploy to EC2 (make sure SSH client is available on the Jenkins agent)
+                    bat """
+                    ssh -o StrictHostKeyChecking=no -i ${PEM_PATH} ubuntu@${EC2_IP} "cd /path/to/project && git pull origin ${BRANCH_NAME} && sudo systemctl restart my-python-app"
+                    """
+                }
             }
         }
     }
 
-   post {
+    post {
         always {
-            // Send email with build status
+            // Send an email with the build status
             emailext(
                 subject: "Jenkins Build Status: ${currentBuild.currentResult}",
                 body: """
@@ -58,7 +59,7 @@ pipeline {
                     <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                     <p>Test Report: <a href="${env.BUILD_URL}testReport">${env.BUILD_URL}testReport</a></p>
                 """,
-                to: "ramyashridharmoger@gmail.com"  // Replace with the email recipient's address
+                to: "ramyashridharmoger@gmail.com"  // Replace with the recipient's email address
             )
         }
     }
