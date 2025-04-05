@@ -40,7 +40,7 @@ pipeline {
                 script {
                     // SSH and deploy to EC2 (make sure SSH client is available on the Jenkins agent)
                     bat """
-                    ssh -o StrictHostKeyChecking=no -i ${PEM_PATH} ubuntu@${EC2_IP} "cd /path/to/project && git pull origin ${BRANCH_NAME} && sudo systemctl restart my-python-app"
+                    ssh -o StrictHostKeyChecking=no -i ${PEM_PATH} ubuntu@${EC2_IP} "cd /home/ubuntu/my-ci-cd-project && git pull origin ${BRANCH_NAME} && sudo systemctl restart my-python-app"
                     """
                 }
             }
