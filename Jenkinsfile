@@ -37,15 +37,11 @@ pipeline {
         stage('Deploy to AWS EC2') {
             steps {
                 script {
-                    // SSH and deploy to EC2 (replace with your deployment script or commands)
-                    bat '''
-                    ssh -o StrictHostKeyChecking=no -i C:\\Users\\ravee\\Downloads\\my-sample-app.pem ubuntu@${EC2_IP} << 'EOF'
-                        cd /path/to/project
-                        git pull origin main
-                        sudo systemctl restart your-app-service
-                    EOF
-                    '''
-                }
+            // SSH and deploy to EC2 (replace with your deployment script or commands)
+            bat '''
+            ssh -o StrictHostKeyChecking=no -i C:\\Users\\ravee\\Downloads\\my-sample-app.pem ubuntu@${EC2_IP} "cd /path/to/project && git pull origin main && sudo systemctl restart my-python-app"
+            '''
+        }
             }
         }
     }
