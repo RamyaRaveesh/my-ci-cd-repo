@@ -49,7 +49,7 @@ pipeline {
         }
     }
 
-    post {
+   post {
         always {
             // Send email with build status
             emailext(
@@ -57,4 +57,12 @@ pipeline {
                 body: """
                     <h3>Build Status: ${currentBuild.currentResult}</h3>
                     <p>Job: ${env.JOB_NAME}</p>
-                    <p>Build Number: ${env.BUILD_NUMBER}</_
+                    <p>Build Number: ${env.BUILD_NUMBER}</p>
+                    <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <p>Test Report: <a href="${env.BUILD_URL}testReport">${env.BUILD_URL}testReport</a></p>
+                """,
+                to: "ramyashridharmoger@gmail.com"  // Replace with the email recipient's address
+            )
+        }
+    }
+}
