@@ -20,7 +20,6 @@ pipeline {
                     // Use batch commands for Windows
                     bat 'python -m venv venv'
                     bat 'venv\\Scripts\\pip install -r requirements.txt'
-'
                 }
             }
         }
