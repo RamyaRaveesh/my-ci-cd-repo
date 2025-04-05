@@ -17,8 +17,9 @@ pipeline {
         stage('Set Up Python Environment') {
             steps {
                 script {
-                    sh 'python3 -m venv venv'
-                    sh './venv/bin/pip install -r requirements.txt'
+                    // Use batch commands for Windows
+                    bat 'python -m venv venv'
+                    bat './venv/Scripts/pip install -r requirements.txt'
                 }
             }
         }
@@ -26,7 +27,8 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    sh './venv/bin/pytest test_app.py'  // Adjust according to your test setup
+                    // Use batch commands for Windows
+                    bat './venv/Scripts/pytest test_app.py'  // Adjust according to your test setup
                 }
             }
         }
@@ -35,8 +37,8 @@ pipeline {
             steps {
                 script {
                     // SSH and deploy to EC2 (replace with your deployment script or commands)
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no -i /path/to/your/aws-key.pem ec2-user@${EC2_IP} << 'EOF'
+                    bat '''
+                    ssh -o StrictHostKeyChecking=no -i C:\\path\\to\\your\\aws-key.pem ec2-user@${EC2_IP} << 'EOF'
                         cd /path/to/project
                         git pull origin main
                         sudo systemctl restart your-app-service
@@ -55,12 +57,4 @@ pipeline {
                 body: """
                     <h3>Build Status: ${currentBuild.currentResult}</h3>
                     <p>Job: ${env.JOB_NAME}</p>
-                    <p>Build Number: ${env.BUILD_NUMBER}</p>
-                    <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p>Test Report: <a href="${env.BUILD_URL}testReport">${env.BUILD_URL}testReport</a></p>
-                """,
-                to: "ramyashridharmoger@gmail.com"  // Replace with the email recipient's address
-            )
-        }
-    }
-}
+                    <p>Build Number: ${env.BUILD_NUMBER}</_
