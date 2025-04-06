@@ -8,10 +8,14 @@ pipeline {
         EC2_IP = '13.51.70.213'  // EC2 instance public IP address
         PEM_PATH = 'C:\\Users\\ravee\\Downloads\\my-sample-app.pem'  // Path to your PEM file
     }
-
+    triggers {
+        githubPush() // This ensures the job triggers on GitHub push events
+    }
     stages {
         stage('Checkout Code') {
             steps {
+                 deleteDir()  
+                bat 'git init'  
                 git branch: 'main', url: GITHUB_REPO
             }
         }
